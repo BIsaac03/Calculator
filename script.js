@@ -1,7 +1,7 @@
 let currentDisplay = document.querySelector("p.solution")
-let num1 = 0
-let num2 = 0
-let operation = 0
+let num1 = undefined
+let num2 = undefined
+let operation = undefined
 let clearNext = false
 
 function add (a, b){
@@ -31,9 +31,12 @@ function calculate(num1, num2, operation){
         return multiply(parseInt(num1), parseInt(num2))
     }
     else if (operation == '/'){
-        return divide(parseInt(num1), parseInt(num2))
+        if (parseInt(num2) != 0)
+        {
+            return divide(parseInt(num1), parseInt(num2))
+        }
     }
-    return undefined
+    return 'OOPS!'
 }
 
 function clearDisplay(){
@@ -72,8 +75,14 @@ numBtns.forEach((numBtn) => {
 const opBtns = document.querySelectorAll("button.operation");
 opBtns.forEach((opBtn) => {
     opBtn.addEventListener("click", () => {
-        num1 = currentDisplay.textContent
-        num2 = 0
+        if (num1 === undefined){
+            num1 = currentDisplay.textContent}
+        else {
+            num2 = currentDisplay.textContent
+            currentDisplay.textContent = calculate(num1, num2, operation)
+            num2 = undefined
+            num1 = currentDisplay.textContent
+        }
         operation = opBtn.textContent
         clearNext = true
     });
@@ -81,15 +90,19 @@ opBtns.forEach((opBtn) => {
 
 const equalBtn = document.querySelector("#equals");
 equalBtn.addEventListener("click", () => {
-    num2 = currentDisplay.textContent
-    currentDisplay.textContent = calculate(num1, num2, operation)
-    clearNext = true
+    if (num1 != undefined && operation != undefined){
+        num2 = currentDisplay.textContent
+        currentDisplay.textContent = calculate(num1, num2, operation)
+        num1 = undefined
+        num2 = undefined
+        clearNext = true
+    }
 });
 
 const clearBtn = document.querySelector(".clear");
 clearBtn.addEventListener("click", () => {
     clearDisplay()
-    num1 = 0
-    num2 = 0
-    operation = 0
+    num1 = undefined
+    num2 = undefined
+    operation = undefined
 });
